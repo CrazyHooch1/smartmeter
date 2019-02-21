@@ -1,7 +1,13 @@
 SmartMeter
 ==============================
 
-A short description of the project.
+In this project, the smart meter data of households in London are analyzed using different unsupervised learning techniques. 
+The data was downloaded from this source: [London Datastore-SmartMeter Energy Consumption Data in London Households](https://data.london.gov.uk/dataset/smartmeter-energy-use-data-in-london-households)
+
+State of the art
+----
+
+A SOTA was performed to find available ressources on smart meter data. See [SOTA](https://github.com/CrazyHooch1/smartmeter/blob/master/references/Readme.md) for more information
 
 Project Organization
 ------------
