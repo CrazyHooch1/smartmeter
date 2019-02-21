@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import zipfile
 import click
 import logging
 from dotenv import find_dotenv, load_dotenv
@@ -15,6 +16,15 @@ def create_data_directory():
     os.makedirs('data/external')
 
 
+def download_zip(url, file):
+    with urllib.request.urlopen(url) as response, open(file, 'wb') as out_file:
+        shutil.copyfileobj(response, out_file)
+
+
+def extract_zip(zip_file, dest_dir):
+    with zipfile.ZipFile(zip_file) as zf:
+        zf.extractall(dest_dir)
+
 @click.command()
 # @click.argument('input_filepath', type=click.Path(exists=True))
 # @click.argument('output_filepath', type=click.Path())
@@ -28,12 +38,16 @@ def main():
     if not os.path.exists('data'):
         create_data_directory()
 
-    logger.info('downloading data...')
     url = 'https://data.london.gov.uk/download/smartmeter-energy-use-data-in-london-households/3527bf39-d93e-4071-8451-df2ade1ea4f2/Power-Networks-LCL-June2015(withAcornGps).zip'
-    file_path = Path('data/raw/')
-    file_name = 'data_london.zip'
-    with urllib.request.urlopen(url) as response, open(file_path.joinpath(file_name), 'wb') as out_file:
-        shutil.copyfileobj(response, out_file)
+    file = Path('data/raw/data_london.zip')
+    if not os.path.isfile(file):
+        logger.info('Downloading data')
+        download_zip(url, file)
+        logger.info('Extracting data')
+        extract_zip(file, 'data/raw')
+    else:
+        logger.info('Extracting data')
+        extract_zip(file, 'data/raw')
 
 
 if __name__ == '__main__':
