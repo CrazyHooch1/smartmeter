@@ -1,4 +1,4 @@
-.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
+.PHONY: clean data create_environment
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -15,10 +15,10 @@ PYTHON_INTERPRETER = python3
 
 ## Create an independent conda environment
 create_environment:
-    conda env create -f environment.yml
+	conda env create -f environment.yml
 
 ## Make Dataset
-data: requirements
+data: 
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py
 
 ## Delete all compiled Python files
