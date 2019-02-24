@@ -1,0 +1,32 @@
+---
+title: "TSclust demo on smart meter clustering"
+output: 
+  html_notebook: 
+    fig_caption: yes
+    toc: yes
+---
+
+# Introduction
+
+In this notebook, smart meter data of households in London is analyzed using time series clustering techniques provided by the R-package `TSclust`. For clustering, the `hclust` method is used, running hierachical clustering. The dataset contains the 4411 households represented by the average hourly load of one year of recordings. 
+
+```{r warning=FALSE, label = "Load libraries and data"}
+library(tidyverse)
+library(TSclust)
+library(factoextra)
+
+df = read_csv('../../data/interim/all_households_hourly.csv') %>%
+  column_to_rownames("LCLid")
+head(df)
+```
+
+
+```{r}
+dis_mat = TSclust::diss(as.data.frame(t(df)), METHOD = "DTWARP")
+hc = hclust(dis_mat, method = "ward.D2")
+print(paste0("Correlation between cophenic distance and original distance: corr=", cor(dis_mat, cophenetic(hc))))
+```
+
+```{r}
+fviz_dend(hc, cex = 0.5)
+```
